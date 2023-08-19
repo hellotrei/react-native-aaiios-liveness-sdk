@@ -1,7 +1,8 @@
-## react-native-aaiios-liveness-sdk(v2.0.7)
+## react-native-aaiios-liveness-sdk(v3.0.3)
 
-### <font color='#0FA80B'>Migration Guides</font>
-1. From v2.0.1, we refactored the code and aligned most of the js api with the android side, so please refer to the table below when migrating from the old version to v2.0.1.
+### Migration Guides
+1. From version 3.0.0, motion detection has been removed, so the properties and methods related to motion detection will not have any effect.
+2. From v2.0.1, we refactored the code and aligned most of the js api with the android side, so please refer to the table below when migrating from the old version to v2.0.1.
     | old method name | new method name |
     | ------ | ------ |
     | NativeModules.RNAAILivenessSDK.initWithMarket("your-market") | AAIIOSLivenessSDK.initSDKByLicense("your-market", false) |
@@ -11,10 +12,10 @@
     | NativeModules.RNAAILivenessSDK.configResultPictureSize(600) | AAIIOSLivenessSDK.setResultPictureSize(600) |
     | NativeModules.RNAAILivenessSDK.configUserId("your-reference-id") | AAIIOSLivenessSDK.bindUser("your-reference-id") |
     | NativeModules.RNAAILivenessSDK.configActionTimeoutSeconds(10) | AAIIOSLivenessSDK.setActionTimeoutSeconds(10) |
-### <font color='#0FA80B'>Download SDK</font>
+### Download SDK
   See [this part](#change-logs-and-release-history) to get SDK download link.
 
-### <font color='#0FA80B'>Running the example app</font>
+### Running the example app
 
 1. Download SDK and extract it, then go into the example directory:
     `cd example`
@@ -39,7 +40,7 @@
     `react-native run-ios` or open `example.xcworkspace` in Xcode and run.
     <div><img src="./imgs/img-example-app.jpg" width="300px" /></div>
 
-### <font color='#0FA80B'>Getting started</font>
+### Getting started
 #### Getting started (react-native >= 0.60)
 
 If your react-navive version >= 0.60, you can refer this part to intergrate `react-native-aaiios-liveness-sdk`.
@@ -67,8 +68,8 @@ If your react-navive version >= 0.60, you can refer this part to intergrate `rea
 
       ...
       
-      pod 'AAINetwork', :http => 'https://prod-guardian-cv.oss-ap-southeast-5.aliyuncs.com/sdk/iOS-libraries/AAINetwork/AAINetwork-V1.0.0.tar.bz2', type: :tbz 
-      pod 'AAILiveness', :http => 'https://prod-guardian-cv.oss-ap-southeast-5.aliyuncs.com/sdk/iOS-liveness-detection/2.0.7/iOS-Liveness-SDK-V2.0.7.tar.bz2', type: :tbz
+      pod 'AAINetwork', :http => 'https://prod-guardian-cv.oss-ap-southeast-5.aliyuncs.com/sdk/iOS-libraries/AAINetwork/AAINetwork-V1.0.1.tar.bz2', type: :tbz 
+      pod 'AAILiveness', :http => 'https://prod-guardian-cv.oss-ap-southeast-5.aliyuncs.com/sdk/iOS-liveness-detection/3.0.3/iOS-Liveness-SDK-v3.0.3.tar.bz2', type: :tbz
 
     end
     ```
@@ -88,13 +89,14 @@ If your react-navive version >= 0.60, you can refer this part to intergrate `rea
 
 #### Getting started (react-native < 0.60)
 
-1. Download the [AAILivenessSDK](https://prod-guardian-cv.oss-ap-southeast-5.aliyuncs.com/sdk/iOS-liveness-detection/2.0.7/iOS-Liveness-SDK-V2.0.7.tar.bz2) and [AAINetwork](https://prod-guardian-cv.oss-ap-southeast-5.aliyuncs.com/sdk/iOS-libraries/AAINetwork/AAINetwork-V1.0.0.tar.bz2), then extract them and add `AAILivenessSDK` folder, `AAINetwork.xcframework` to your project:
+1. Download the [AAILivenessSDK](https://prod-guardian-cv.oss-ap-southeast-5.aliyuncs.com/sdk/iOS-liveness-detection/3.0.3/iOS-Liveness-SDK-v3.0.3.tar.bz2) and [AAINetwork](https://prod-guardian-cv.oss-ap-southeast-5.aliyuncs.com/sdk/iOS-libraries/AAINetwork/AAINetwork-V1.0.1.tar.bz2), then extract them and add `AAILivenessSDK` folder, `AAINetwork.xcframework` to your project:
     
     <div><img src="./imgs/img-add-sdk-files.png" width="600px"  /></div>
 2. Add the `RNLivenessPlugin` folder to your project.
 3. In Xcode, choose "TARGETS -> General" add the following system libraries and frameworks in the `Frameworks, Libraries, and Embedded Content` section:
    - `libz.tbd`
    - `libc++.tbd`
+   - `libresolv.9.tbd`
    - `AVFoundation.framework`
    - `CoreMotion.framework`
    - `SystemConfiguration.framework`
@@ -105,7 +107,9 @@ If your react-navive version >= 0.60, you can refer this part to intergrate `rea
 
 <div><img src="./imgs/img-framework.jpg" width="800px"  /></div>
 
-4. In Xcode, add camera and motion sensor (gyroscope) usage description in `Info.plist` as bellow. Ignore this step if you have added those.
+4. Add `-ObjC` to the other linker flag in the project configuration.
+
+5. In Xcode, add camera and motion sensor (gyroscope) usage description in `Info.plist` as bellow. Ignore this step if you have added those.
    
    ```xml
    <key>NSCameraUsageDescription</key>
@@ -114,9 +118,9 @@ If your react-navive version >= 0.60, you can refer this part to intergrate `rea
    <string>Use the motion sensor to get the phone orientation</string>
    ```
 
-5. Rename `index.js` to `AAIIOSLivenessSDK.js`, then add this `js` file to your react native project.
+6. Rename `index.js` to `AAIIOSLivenessSDK.js`, then add this `js` file to your react native project.
 
-### <font color='#0FA80B'>Usage</font>
+### Usage
 
 ```javascript
 import AAIIOSLivenessSDK from 'react-native-aaiios-liveness-sdk';
@@ -164,25 +168,9 @@ import AAIIOSLivenessSDK from 'react-native-aaiios-liveness-sdk';
 
     /*
     /// Optional 
-    // Set action detection time interval. Default is 10s.
-    // Note that this value represents the timeout for a motion,
-    // not the total timeout for all motions.
-    AAIIOSLivenessSDK.setActionTimeoutSeconds(10)
-    */
-
-    /*
-    /// Optional 
     // Set the size(width) of output `img` in `onDetectionComplete`. 
     // Image size(width) should be in range [300, 1000], default image size(width) is 600(600x600).
     AAIIOSLivenessSDK.setResultPictureSize(600)
-    */
-
-    /*
-    /// Optional
-    // Set the action sequence. Available action type are "POS_YAW", "BLINK", "MOUTH"
-    // the first boolean value indicates if the given actions should be shuffled.
-    // Default action sequence ["POS_YAW", "BLINK"] and the order of them is random.
-    AAIIOSLivenessSDK.setActionSequence(true, ["POS_YAW", "BLINK", "MOUTH"])
     */
 
     /*
@@ -226,13 +214,13 @@ import AAIIOSLivenessSDK from 'react-native-aaiios-liveness-sdk';
 
       /*
       /// Optional
-      /// Set the timeout for prepare stage, default is 10s.
+      /// Set the timeout for prepare stage, default is 50s.
       ///
       /// This value refers to the time from when the sdk page is displayed to when the motion detection is ready.
       /// For example, after the sdk page is presented, if the user does not hold the phone upright or put the face in the detection area,
       /// and continues in this state for a certain period of time, then the `onDetectionFailed` will be called,
       /// and the value of the "errorCode" is "fail_reason_prepare_timeout".
-      prepareTimeoutInterval: 10,
+      prepareTimeoutInterval: 50,
       */
 
       /*
@@ -342,6 +330,16 @@ import AAIIOSLivenessSDK from 'react-native-aaiios-liveness-sdk';
 ```
 
 ### Change logs and release history
+
+#### v3.0.3 [Download](https://prod-guardian-cv.oss-ap-southeast-5.aliyuncs.com/sdk/iOS-liveness-detection/3.0.3/react-native-aaiios-liveness-sdk-V3.0.3.zip)
+1. Sync native SDK.
+
+#### v3.0.2 [Download](https://prod-guardian-cv.oss-ap-southeast-5.aliyuncs.com/sdk/iOS-liveness-detection/3.0.2/react-native-aaiios-liveness-sdk-V3.0.2.zip)
+1. Sync native SDK.
+
+#### v3.0.0 [Download](https://prod-guardian-cv.oss-ap-southeast-5.aliyuncs.com/sdk/iOS-liveness-detection/3.0.0/react-native-aaiios-liveness-sdk-V3.0.0.zip)
+1. Sync native SDK.
+2. From version 3.0.0, motion detection has been removed, so the properties and methods related to motion detection will not have any effect.
 
 #### v2.0.7 [Download](https://prod-guardian-cv.oss-ap-southeast-5.aliyuncs.com/sdk/iOS-liveness-detection/2.0.7/react-native-aaiios-liveness-sdk-V2.0.7.zip)
 1. Sync native SDK.
